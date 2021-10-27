@@ -1,0 +1,3 @@
+python-decouple
+beautifulsoup4
+selenium
