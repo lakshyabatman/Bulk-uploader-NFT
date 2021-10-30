@@ -7,6 +7,7 @@ from decouple import config
 import time
 
 from CSV import CSV
+from JSON import JSON
 from NFT import NFT
 
 EXTENSION_PATH = config("EXTENSION_PATH")
@@ -98,18 +99,12 @@ if __name__ == '__main__':
     driver.execute_script('''window.open("https://opensea.io/collection/guy-with-a-smirk/assets/create","_blank")''')
     driver.switch_to.window(driver.window_handles[-1])
     time.sleep(7)  # todo- need to manually click on sign button for now
-    data = CSV(os.getcwd() + "/data/data.csv").readFromFile()
-    for nft in data:
-        if "file" not in nft:
-            raise Exception("Why, no file ??")
-        file = nft["file"]
-        name = nft["name"] if "name" in nft else "NFT 1"
-        description = nft["description"] if "description" in nft else "Description og NFT 1"
-        metadata = {
-            "character": nft["character"] if "character" in nft else "None",
-            "clothing": nft["clothing"] if "clothing" in nft else "None",
-            "extra": nft["extra"] if "extra" in nft else "None"
-        }
+    data = JSON(os.getcwd() + "/data/metadata.json").readFromFile()
+    for key in data:
+        name = "#"+key
+        description = name + " from DemonQueenNFT"
+        file = key+".png"
+        metadata = data[key]
         upload(driver, NFT(name, description, metadata, os.getcwd() + "/data/" + file))
     print("DONE!!")
 
