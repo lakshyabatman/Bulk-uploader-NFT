@@ -18,6 +18,7 @@ PASSWORD = config("PASSWORD")
 
 CHROME_DRIVER_PATH = config("CHROME_DRIVER_PATH")
 
+
 def setup_metamask_wallet(d):
     d.switch_to.window(d.window_handles[0])  # focus on metamask tab
     time.sleep(5)
@@ -42,14 +43,15 @@ def setup_metamask_wallet(d):
 
 
 def move_to_opensea(d):
-    d.execute_script('''window.open("https://opensea.io/collection/guy-with-a-smirk/assets/create","_blank")''')
+    d.execute_script('''window.open("https://opensea.io/collection/cryptoch0x61d/assets/create","_blank")''')
     d.switch_to.window(d.window_handles[2])
     time.sleep(3)
 
 
 def signin_to_opensea(d):
-    d.find_element_by_xpath('//span[text()="MetaMask"]').click()
-    time.sleep(2)
+    # d.find_element_by_xpath('//span[text()="MetaMask"]').click()
+    # For now you have to click to select the wallets, it's seems it's not working now.
+    time.sleep(6)
     d.switch_to.window(d.window_handles[3])
     d.find_element_by_xpath('//button[text()="Next"]').click()
     time.sleep(2)
@@ -58,13 +60,14 @@ def signin_to_opensea(d):
 
 def fillMetadata(d, metadataMap: dict):
     d.find_element_by_xpath('//div[@class="AssetFormTraitSection--side"]/button').click()
-    for key in metadataMap:
+    for index, value in enumerate(metadataMap):
         input1 = d.find_element_by_xpath('//tbody[@class="AssetTraitsForm--body"]/tr[last()]/td[1]/div/div/input')
         input2 = d.find_element_by_xpath('//tbody[@class="AssetTraitsForm--body"]/tr[last()]/td[2]/div/div/input')
 
-        input1.send_keys(str(key))
-        input2.send_keys(str(metadataMap[key]))
-        d.find_element_by_xpath('//button[text()="Add more"]').click()
+        input1.send_keys(str(value))
+        input2.send_keys(str(metadataMap[value]))
+        if index != len(metadataMap) - 1:
+            d.find_element_by_xpath('//button[text()="Add more"]').click()
 
     time.sleep(1)
     d.find_element_by_xpath('//button[text()="Save"]').click()
@@ -84,7 +87,7 @@ def upload(d, nft: NFT):
     time.sleep(2)
     d.find_element_by_xpath('//button[text()="Create"]').click()
     time.sleep(5)
-    d.execute_script('''location.href="https://opensea.io/collection/guy-with-a-smirk/assets/create"''')
+    d.execute_script('''location.href="https://opensea.io/collection/cryptoch0x61d/assets/create"''')
 
 
 if __name__ == '__main__':
@@ -96,15 +99,14 @@ if __name__ == '__main__':
     time.sleep(2)
     move_to_opensea(driver)
     signin_to_opensea(driver)
-    driver.execute_script('''window.open("https://opensea.io/collection/guy-with-a-smirk/assets/create","_blank")''')
+    driver.execute_script('''window.open("https://opensea.io/collection/cryptoch0x61d/assets/create","_blank")''')
     driver.switch_to.window(driver.window_handles[-1])
     time.sleep(7)  # todo- need to manually click on sign button for now
     data = JSON(os.getcwd() + "/data/metadata.json").readFromFile()
     for key in data:
-        name = "#"+key
-        description = name + " from DemonQueenNFT"
+        name = "#"+key # NAME OF YOUR FILE
+        description = name + " from DemonQueenNFT" #NOTE: YOU NEED TO UPDATE THIS ACCORDINGLY
         file = key+".png"
         metadata = data[key]
         upload(driver, NFT(name, description, metadata, os.getcwd() + "/data/" + file))
     print("DONE!!")
-
