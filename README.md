@@ -1,5 +1,9 @@
 # Bulk NFT Uploader
 
+### Sorry but, I'm not maintaining this project anymore.
+-  If you're a artist trying to get into NFTs, feel free to reach out to me, I can build NFT smart contracts and minting sites for you. 
+-  If you're contributor and interested to work on this project, feel free to contribute. :D
+
 ## Description
 Simple easy peasy python script which logins to opensea account using metamask and bulk uploads NFT to your default collection.
 
